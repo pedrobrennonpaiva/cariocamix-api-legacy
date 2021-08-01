@@ -5,5 +5,4 @@ tmp/
 temp/
 build/
 dist/
-.env
 package-lock.json
