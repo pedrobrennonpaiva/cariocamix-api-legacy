@@ -22,9 +22,6 @@ import productRouter from './routes/productRouter';
 
 dotenv.config();
 
-const key = fs.readFileSync('./key.pem');
-const cert = fs.readFileSync('./cert.pem');
-
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -51,6 +48,12 @@ app.use('/productItem', productItemRouter);
 
 app.listen(port);
 
-const server = https.createServer({key: key, cert: cert }, app);
-server.listen(5001, () => { console.log('Servidor HTTPS: 5001') });
+if(process.env.NODE_ENV === 'development')
+{
+    const key = fs.readFileSync('./key.pem');
+    const cert = fs.readFileSync('./cert.pem');
+    const server = https.createServer({key: key, cert: cert }, app);
+    server.listen(5001, () => { console.log('Servidor HTTPS: 5001') });
+}
+
 console.log('Servidor iniciado na porta: ' + port);
