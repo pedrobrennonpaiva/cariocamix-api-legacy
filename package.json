@@ -5,7 +5,11 @@
    "main": "index.js",
    "scripts": {
       "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts",
-      "start": "node src/server.js"
+      "start": "node src/server.js",
+      "postinstall":"tsc"
+   },
+   "engines": {
+      "node": "16.6.0"
    },
    "keywords": [],
    "author": "",
