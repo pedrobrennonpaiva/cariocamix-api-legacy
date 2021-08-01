@@ -1,19 +1,10 @@
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGODB_URI, 
-    { 
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useCreateIndex: true, 
-    }, () => {
+mongoose.connect(process.env.MONGODB_URI, { useCreateIndex: true, }, () => {
     console.log('Banco conectado');
 });
 
-export const connect = mongoose.createConnection(process.env.MONGODB_URI, { 
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true, 
-});
+export const connect = mongoose.createConnection(process.env.MONGODB_URI);
 
 import UserDb from './models/UserDb';
 import AdminDb from './models/AdminDb';

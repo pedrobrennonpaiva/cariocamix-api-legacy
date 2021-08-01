@@ -100,7 +100,7 @@ export default {
         });
 
         gfs.find({ filename: request.params.filename }).toArray((err, files) => {
-            if (!files[0] || files.length === 0) {
+            if (!files![0] || files?.length === 0) {
                 return response.status(200).json({
                     success: false,
                     message: 'No files available',
@@ -109,7 +109,7 @@ export default {
 
             response.status(200).json({
                 success: true,
-                file: files[0],
+                file: files![0],
             });
         });
 
@@ -117,9 +117,7 @@ export default {
 
     async uploadByFilenameBrowser(request: any, response: Response) {
 
-        const connect = mongoose.createConnection("mongodb+srv://sermilitar-api:nxsBRCC8LQN1RuN9@cluster-sermilitar.toi1o.mongodb.net/serMilitar?retryWrites=true&w=majority", 
-            { useNewUrlParser: true, useUnifiedTopology: true 
-        });
+        const connect = mongoose.createConnection(process.env.MONGODB_URI);
         let gfs: GridFSBucket;
         
         connect.once("open", () => {
@@ -128,14 +126,14 @@ export default {
             });
 
             gfs.find({ filename: request.params.filename }).toArray((err, files) => {
-                if (!files[0] || files.length === 0) {
+                if (!files![0] || files?.length === 0) {
                     return response.status(200).json({
                         success: false,
                         message: 'No files available',
                     });
                 }
 
-                if (files[0].contentType === 'image/jpeg' || files[0].contentType === 'image/png' || files[0].contentType === 'image/svg+xml') {
+                if (files![0].contentType === 'image/jpeg' || files![0].contentType === 'image/png' || files![0].contentType === 'image/svg+xml') {
                     gfs.openDownloadStreamByName(request.params.filename).pipe(response);
                 } else {
                     response.status(404).json({
