@@ -1,17 +1,20 @@
-const util = require("util");
+import util from "util";
 const multer = require("multer");
-const GridFsStorage = require("multer-gridfs-storage");
-const crypt = require("crypto");
-const path = require("path");
+const {GridFsStorage} = require("multer-gridfs-storage");
+import crypt from "crypto";
+import path from "path";
 
 var storage = new GridFsStorage({
   url: process.env.MONGODB_URI,
-  options: { 
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-   },
   file: (req: any, file: any) => {
+    console.log(file);
+    var filename = `${Date.now()}-cariocamix-${file.originalname}`;
+
+    return {
+        bucketName: "uploads",
+        filename,
+        fileUrl: `${req.protocol}://${req.headers.host}/user/upload/browser/${filename}`
+    };
     // return new Promise((resolve, reject) => {
     //     crypt.randomBytes(16, (err: any, buf: any) => {
     //       if (err) {
@@ -25,13 +28,6 @@ var storage = new GridFsStorage({
     //       resolve(fileInfo);
     //     });
     //   });
-    var filename = `${Date.now()}-cariocamix-${file.originalname}`;
-
-    return {
-        bucketName: "uploads",
-        filename,
-        fileUrl: `${req.protocol}://${req.headers.host}/user/upload/browser/${filename}`
-    };
   }
 });
 

@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { GridFSBucket } from "mongodb";
 import mongoose from 'mongoose';
-import db, { connect } from '../database/db';
+import db from '../database/db';
 const upload = require("../services/ImageService");
 
 export default {
@@ -10,7 +10,8 @@ export default {
 
         try {
             await upload(request, response);
-            
+
+            console.log('passou');
             console.log(request.file);
             if (request.file === undefined) {
                 return response.send({ 
@@ -64,7 +65,7 @@ export default {
 
     async uploadByFilenameBrowser(request: any, response: Response) {
 
-        const connect = mongoose.createConnection(process.env.MONGODB_URI, { useNewUrlParser: true });
+        const connect = mongoose.createConnection(process.env.MONGODB_URI);
         let gfs: GridFSBucket;
         
         connect.once("open", () => {
