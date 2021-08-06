@@ -1,6 +1,6 @@
 import util from "util";
 const multer = require("multer");
-const {GridFsStorage} = require("multer-gridfs-storage");
+import { GridFsStorage } from "../../packages-temp/multer-gridfs-storage";
 import crypt from "crypto";
 import path from "path";
 
