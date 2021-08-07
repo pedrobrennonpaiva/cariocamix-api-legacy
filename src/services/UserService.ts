@@ -122,7 +122,7 @@ export class UserService {
             var tokenExpires = new Date(data.valueOf() - (data.getTimezoneOffset() * 60000));
             tokenExpires.setDate(tokenExpires.getDate() + 7);
 
-            const token = jwt.sign({ sub: user.id }, process.env.SECRET, { expiresIn: '7d' });
+            const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: '7d' });
             
             return response.json({
                 ...ExtensionMethod.WithoutPassword(user.toJSON()),

@@ -39,30 +39,6 @@ export default {
         }
     },
 
-    async uploadByFilename(request: any, response: Response) {
-
-        let gfs;
-        
-        gfs = new mongoose.mongo.GridFSBucket(db.connect.db, {
-            bucketName: "uploads"
-        });
-
-        gfs.find({ filename: request.params.filename }).toArray((err, files) => {
-            if (!files![0] || files?.length === 0) {
-                return response.status(404).json({
-                    success: false,
-                    message: 'Sem arquivos disponíveis!',
-                });
-            }
-
-            response.status(200).json({
-                success: true,
-                file: files![0],
-            });
-        });
-
-    },
-
     async uploadByFilenameBrowser(request: any, response: Response) {
 
         const connect = mongoose.createConnection(process.env.MONGODB_URI);
@@ -100,4 +76,28 @@ export default {
             });
         });
     },
+
+    // async uploadByFilename(request: any, response: Response) {
+
+    //     let gfs;
+        
+    //     gfs = new mongoose.mongo.GridFSBucket(db.connect.db, {
+    //         bucketName: "uploads"
+    //     });
+
+    //     gfs.find({ filename: request.params.filename }).toArray((err, files) => {
+    //         if (!files![0] || files?.length === 0) {
+    //             return response.status(404).json({
+    //                 success: false,
+    //                 message: 'Sem arquivos disponíveis!',
+    //             });
+    //         }
+
+    //         response.status(200).json({
+    //             success: true,
+    //             file: files![0],
+    //         });
+    //     });
+
+    // },
 }
