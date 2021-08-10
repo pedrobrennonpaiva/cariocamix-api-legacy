@@ -41,7 +41,10 @@ export default {
 
     async uploadByFilenameBrowser(request: any, response: Response) {
 
-        const connect = mongoose.createConnection(process.env.MONGODB_URI);
+        const connect = mongoose.createConnection(process.env.MONGODB_URI, { 
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
         let gfs: GridFSBucket;
         
         connect.once("open", () => {
