@@ -247,7 +247,7 @@ export class UserService {
         us.cpf = us.cpf ?? oldUser?.cpf;
         us.numberPhone = us.numberPhone ?? oldUser?.numberPhone;
         us.email = us.email ?? oldUser?.email;
-        us.image = oldUser?.image!;
+        us.image = us.image ?? oldUser?.image!;
         us.password = oldUser?.password!;
 
         if((us.email != oldUser?.email && !this.getByEmail(us.email)) || 
