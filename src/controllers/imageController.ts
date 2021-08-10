@@ -1,8 +1,10 @@
 import { Response } from "express";
 import { GridFSBucket } from "mongodb";
 import mongoose from 'mongoose';
-import db from '../database/db';
-const upload = require("../services/ImageService");
+import { ImageService } from "../services/ImageService";
+
+import { uploadFilesMiddleware as upload } from "../services/ImageService";
+var imageService = new ImageService();
 
 export default {
 
@@ -80,27 +82,21 @@ export default {
         });
     },
 
-    // async uploadByFilename(request: any, response: Response) {
+    async deleteUpload(request: any, response: Response) {
 
-    //     let gfs;
-        
-    //     gfs = new mongoose.mongo.GridFSBucket(db.connect.db, {
-    //         bucketName: "uploads"
-    //     });
-
-    //     gfs.find({ filename: request.params.filename }).toArray((err, files) => {
-    //         if (!files![0] || files?.length === 0) {
-    //             return response.status(404).json({
-    //                 success: false,
-    //                 message: 'Sem arquivos disponíveis!',
-    //             });
-    //         }
-
-    //         response.status(200).json({
-    //             success: true,
-    //             file: files![0],
-    //         });
-    //     });
-
-    // },
+        imageService.delete(request.params.filename).then(() => {
+            return response.status(200).send({ 
+                success: true, 
+                message: 'Imagem removida com sucesso!'
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(400).send({ 
+                success: false, 
+                message: 'Ocorreu um erro ao remover a imagem!',
+                error: error
+            });
+        });
+    },
 }

@@ -7,7 +7,7 @@ const routes = Router();
 routes.get('/', deliveryTaxController.get);
 routes.get('/:id', deliveryTaxController.getById);
 routes.post('/', deliveryTaxController.insert);
-routes.put('/:id', deliveryTaxController.udpate);
+routes.put('/:id', auth.verifyJWT, deliveryTaxController.udpate);
 routes.delete('/:id', auth.verifyJWT, deliveryTaxController.delete);
 
 export default routes;

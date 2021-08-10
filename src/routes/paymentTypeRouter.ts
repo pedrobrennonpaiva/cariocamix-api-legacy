@@ -7,7 +7,7 @@ const routes = Router();
 routes.get('/', paymentTypeController.get);
 routes.get('/:id', paymentTypeController.getById);
 routes.post('/', paymentTypeController.insert);
-routes.put('/:id', paymentTypeController.udpate);
+routes.put('/:id', auth.verifyJWT, paymentTypeController.udpate);
 routes.delete('/:id', auth.verifyJWT, paymentTypeController.delete);
 
 export default routes;

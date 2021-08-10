@@ -7,7 +7,7 @@ const routes = Router();
 routes.get('/', itemController.get);
 routes.get('/:id', itemController.getById);
 routes.post('/', itemController.insert);
-routes.put('/:id', itemController.udpate);
+routes.put('/:id', auth.verifyJWT, itemController.udpate);
 routes.delete('/:id', auth.verifyJWT, itemController.delete);
 
 export default routes;

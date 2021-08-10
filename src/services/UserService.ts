@@ -11,6 +11,7 @@ import Message from "../utils/Message";
 import StringRandom from "../utils/StringRandom";
 import { EmailService } from "./EmailService";
 import { EmailHtml } from "../utils/EmailHtml";
+import { ImageService } from "./ImageService";
 const UserDb = db.User;
 
 export class UserService {
@@ -247,8 +248,17 @@ export class UserService {
         us.cpf = us.cpf ?? oldUser?.cpf;
         us.numberPhone = us.numberPhone ?? oldUser?.numberPhone;
         us.email = us.email ?? oldUser?.email;
-        us.image = us.image ?? oldUser?.image!;
         us.password = oldUser?.password!;
+
+        if(us.image && oldUser?.image)
+        {
+            var imgService = new ImageService();
+            await imgService.delete(oldUser?.image!.split('/').slice(-1)[0]).catch(() => '');
+        }
+        else if(!us.image) 
+        {
+            us.image = oldUser?.image!;
+        }
 
         if((us.email != oldUser?.email && !this.getByEmail(us.email)) || 
             (us.username != oldUser?.username && !this.getByUsername(us.username)))

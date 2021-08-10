@@ -1,8 +1,8 @@
 import util from "util";
 const multer = require("multer");
 import { GridFsStorage } from "../../packages-temp/multer-gridfs-storage";
-import crypt from "crypto";
-import path from "path";
+import { GridFSBucket } from "mongodb";
+import mongoose from 'mongoose';
 
 var storage = new GridFsStorage({
   url: process.env.MONGODB_URI,
@@ -32,5 +32,39 @@ var storage = new GridFsStorage({
 });
 
 var upload = multer({ storage }).single("file");
-var uploadFilesMiddleware = util.promisify(upload);
-module.exports = uploadFilesMiddleware;
+export var uploadFilesMiddleware = util.promisify(upload);
+
+export class ImageService {
+
+  async delete(filename: string) {
+
+    const connect = mongoose.createConnection(process.env.MONGODB_URI, { 
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    let gfs: GridFSBucket;
+
+    return new Promise((resolve, reject) => {
+        connect.once("open", async () => {
+          gfs = new mongoose.mongo.GridFSBucket(connect.db, {
+              bucketName: "uploads"
+          });
+
+          const images = await gfs.find({ filename: filename }).toArray();
+
+          if (images.length === 0) {
+            reject('Arquivo não encontrado');
+          }
+          else
+          {
+            Promise.all(
+              images.map((img) => {
+                return gfs.delete(img._id);
+              })
+            );
+            resolve('');
+          }
+      });
+    });
+  }
+}

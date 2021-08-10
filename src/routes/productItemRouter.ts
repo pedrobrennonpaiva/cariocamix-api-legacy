@@ -8,7 +8,7 @@ routes.get('/', productItemController.get);
 routes.get('/:id', productItemController.getById);
 routes.get('/product/:id', productItemController.getByProductId);
 routes.post('/', productItemController.insert);
-routes.put('/:id', productItemController.udpate);
+routes.put('/:id', auth.verifyJWT, productItemController.udpate);
 routes.delete('/:id', auth.verifyJWT, productItemController.delete);
 
 export default routes;

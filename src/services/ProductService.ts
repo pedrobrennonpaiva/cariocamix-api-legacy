@@ -4,6 +4,7 @@ import db, { connect } from '../database/db';
 import Message from "../utils/Message";
 import { CategoryProduct } from "../models/CategoryProduct";
 import { ProductItem } from "../models/ProductItem";
+import { ImageService } from "./ImageService";
 const ProductDb = db.Product;
 const CategoryDb = db.Category;
 const CategoryProductDb = db.CategoryProduct;
@@ -155,9 +156,18 @@ export class ProductService {
         model.registerDate = oldProduct?.registerDate!;
         model.title = model.title ?? oldProduct?.title;
         model.description = model.description ?? oldProduct?.description;
-        model.image = model.image ?? oldProduct?.image;
         model.price = model.price ?? oldProduct?.price;
         model.points = model.points ?? oldProduct?.points;
+
+        if(model.image && oldProduct?.image)
+        {
+            var imgService = new ImageService();
+            await imgService.delete(oldProduct?.image!.split('/').slice(-1)[0]).catch(() => '');
+        }
+        else if(!model.image) 
+        {
+            model.image = oldProduct?.image!;
+        }
         
         var categoryProducts = request.body.categoryProducts as CategoryProduct[];
         var productItems = request.body.productItems as ProductItem[];
