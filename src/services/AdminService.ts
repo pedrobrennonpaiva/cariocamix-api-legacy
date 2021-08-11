@@ -228,6 +228,7 @@ export class AdminService {
                 success: false, 
                 message: 'Já existe um admin com este e-mail ou username!',
             });
+            return;
         }
         
         var store = new Store();
@@ -309,6 +310,7 @@ export class AdminService {
                 success: false, 
                 message: 'Já existe um admin com este e-mail ou username!',
             });
+            return;
         }
 
         var store = new Store();

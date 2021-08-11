@@ -203,6 +203,7 @@ export class UserService {
                 success: false, 
                 message: 'Já existe um usuário com este e-mail ou username!',
             });
+            return;
         }
 
         const db = new UserDb(user);
@@ -273,6 +274,7 @@ export class UserService {
                 success: false, 
                 message: 'Já existe um usuário com este e-mail ou username!',
             });
+            return;
         }
         
         await UserDb.findOneAndUpdate({ id: request.params.id }, us, { new: true }, ((err: any, user: any) => {
