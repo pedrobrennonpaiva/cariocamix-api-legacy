@@ -45,6 +45,34 @@ export class AdminService {
         }
     }
 
+    async getByEmail(email: string) {
+        
+        try
+        {
+            var admins = await AdminDb.find({"email" : email});
+
+            return ExtensionMethod.WithoutPasswordsAdmin(admins);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    async getByUsername(username: string) {
+        
+        try
+        {
+            var admins = await AdminDb.find({ username });
+
+            return ExtensionMethod.WithoutPasswordsAdmin(admins);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     async getByName(name: string) {
         
         try
@@ -191,6 +219,17 @@ export class AdminService {
         admin.password = request.body.password ? bcrypt.hashSync(request.body.password, 8) :
                             bcrypt.hashSync(randomPass, 8);
 
+        var emailExist = await this.getByEmail(admin.email);
+        var usernameExist = await this.getByUsername(admin.username);
+        
+        if((emailExist && emailExist.length > 0) || (usernameExist && usernameExist.length > 0))
+        {
+            response.status(400).send({ 
+                success: false, 
+                message: 'Já existe um admin com este e-mail ou username!',
+            });
+        }
+        
         var store = new Store();
 
         if(admin.storeId)
@@ -260,6 +299,18 @@ export class AdminService {
         us.image = oldAdmin?.image!;
         us.password = oldAdmin?.password!;
         
+        var emailExist = await this.getByEmail(us.email);
+        var usernameExist = await this.getByUsername(us.username);
+        
+        if((us.email != oldAdmin?.email && emailExist && emailExist.length > 0) || 
+           (us.username != oldAdmin?.username && usernameExist && usernameExist.length > 0))
+        {
+            response.status(400).send({ 
+                success: false, 
+                message: 'Já existe um admin com este e-mail ou username!',
+            });
+        }
+
         var store = new Store();
 
         if(us.storeId && us.storeId !== oldAdmin?.storeId)

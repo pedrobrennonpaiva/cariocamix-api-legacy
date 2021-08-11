@@ -194,7 +194,10 @@ export class UserService {
         user.password = request.body.password ? bcrypt.hashSync(request.body.password, 8) :
                             bcrypt.hashSync(randomPass, 8);
 
-        if(!this.getByEmail(user.email) || !this.getByUsername(user.username))
+        var emailExist = await this.getByEmail(user.email);
+        var usernameExist = await this.getByUsername(user.username);
+        
+        if((emailExist && emailExist.length > 0) || (usernameExist && usernameExist.length > 0))
         {
             response.status(400).send({ 
                 success: false, 
@@ -260,8 +263,11 @@ export class UserService {
             us.image = oldUser?.image!;
         }
 
-        if((us.email != oldUser?.email && !this.getByEmail(us.email)) || 
-            (us.username != oldUser?.username && !this.getByUsername(us.username)))
+        var emailExist = await this.getByEmail(us.email);
+        var usernameExist = await this.getByUsername(us.username);
+        
+        if((us.email != oldUser?.email && emailExist && emailExist.length > 0) || 
+           (us.username != oldUser?.username && usernameExist && usernameExist.length > 0))
         {
             response.status(400).send({ 
                 success: false, 
