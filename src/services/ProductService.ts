@@ -72,6 +72,7 @@ export class ProductService {
         model.image = request.body.image;
         model.price = request.body.price;
         model.points = request.body.points;
+        model.isOneItem = request.body.isOneItem;
 
         var categoryProducts = request.body.categoryProducts as CategoryProduct[];
         var productItems = request.body.productItems as ProductItem[];
@@ -179,7 +180,8 @@ export class ProductService {
         model.description = model.description ?? oldProduct?.description;
         model.price = model.price ?? oldProduct?.price;
         model.points = model.points ?? oldProduct?.points;
-
+        model.isOneItem = model.isOneItem ?? oldProduct?.isOneItem;
+        
         if(model.image && oldProduct?.image)
         {
             var imgService = new ImageService();
@@ -212,7 +214,7 @@ export class ProductService {
 
                 var ctProd = await CategoryProductDb.find({ productId: id }) as CategoryProduct[];
                 var prodItem = await ProductItemDb.find({ productId: id }) as ProductItem[];
-                console.log(prodItem);
+
                 var error = '';
                 
                 if(categoryProducts && categoryProducts !== undefined && categoryProducts.length > 0)

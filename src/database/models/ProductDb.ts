@@ -8,6 +8,7 @@ var schema = new Schema({
     image: { required: false, type: String },
     price: { required: true, type: Number },
     points: { required: false, type: Number },
+    isOneItem: { required: false, type: Boolean },
     registerDate: { required: false, type: Date },
 });
 
