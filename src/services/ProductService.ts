@@ -5,6 +5,8 @@ import Message from "../utils/Message";
 import { CategoryProduct } from "../models/CategoryProduct";
 import { ProductItem } from "../models/ProductItem";
 import { ImageService } from "./ImageService";
+import { Item } from "../models/Item";
+
 const ProductDb = db.Product;
 const CategoryDb = db.Category;
 const CategoryProductDb = db.CategoryProduct;
@@ -13,13 +15,31 @@ const ItemDb = db.Item;
 
 export class ProductService {
 
+    private async mountPItems(productId: string, items: Item[]) : Promise<ProductItem[] | null> {
+
+        var pitems = await ProductItemDb.find({ productId: productId }).lean();
+
+        if(!pitems || pitems.length <= 0)
+        {
+            return null;
+        }
+
+        for(var pitem of pitems)
+        {
+            pitem.item = items.find(x => x.id === pitem.itemId) ?? null;
+        }
+
+        return pitems;
+    }
+
     async get() {
 
-        var models = await ProductDb.find().lean() as Product[];
+        var models = await ProductDb.find().lean() as Product[];    
+        var items = await ItemDb.find().lean() as Item[];
 
         for(var model of models)
-        { 
-            model.productItems = await ProductItemDb.find({ productId: model?.id });
+        {
+            model.productItems = await this.mountPItems(model?.id, items);
             model.categoryProducts = await CategoryProductDb.find({ productId: model?.id });
         }
 
@@ -31,8 +51,9 @@ export class ProductService {
         try
         {
             var model = await ProductDb.findOne({ id }).lean() as Product;
+            var items = await ItemDb.find().lean() as Item[];
 
-            model.productItems = await ProductItemDb.find({ productId: model?.id });
+            model.productItems = await this.mountPItems(model?.id, items);
             model.categoryProducts = await CategoryProductDb.find({ productId: model?.id });
 
             return model;
