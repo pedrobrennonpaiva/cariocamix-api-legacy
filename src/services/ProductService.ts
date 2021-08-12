@@ -182,7 +182,7 @@ export class ProductService {
         model.points = model.points ?? oldProduct?.points;
         model.isOneItem = model.isOneItem ?? oldProduct?.isOneItem;
         
-        if(model.image && oldProduct?.image)
+        if(model.image && oldProduct?.image && model.image !== oldProduct?.image)
         {
             var imgService = new ImageService();
             await imgService.delete(oldProduct?.image!.split('/').slice(-1)[0]).catch(() => '');
