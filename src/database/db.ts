@@ -27,6 +27,7 @@ import PaymentTypeDb from './models/PaymentTypeDb';
 import ProductDb from './models/ProductDb';
 import ProductItemDb from './models/ProductItemDb';
 import StoreDb from './models/StoreDb';
+import StoreDayHourDb from './models/StoreDayHourDb';
 import UserCouponDb from './models/UserCouponDb';
 
 var db = {
@@ -49,6 +50,7 @@ var db = {
     Product: ProductDb,
     ProductItem: ProductItemDb,
     Store: StoreDb,
+    StoreDayHour: StoreDayHourDb,
     UserCoupon: UserCouponDb,
 };
 
