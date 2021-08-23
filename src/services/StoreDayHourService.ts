@@ -70,7 +70,7 @@ export class StoreDayHourService {
             else {
                 response.status(201).send({ 
                     success: true, 
-                    message: Message.CREATE_SUCCESS('Loja', true),
+                    message: Message.CREATE_SUCCESS('Dia/horário da loja', true),
                     data: model
                 });
             }
@@ -116,7 +116,7 @@ export class StoreDayHourService {
 
             response.status(200).send({ 
                 success: true, 
-                message: Message.UPDATE_SUCCESS('Loja', true),
+                message: Message.UPDATE_SUCCESS('Dia/horário da loja', true),
                 data: result
             });
         }));
@@ -138,7 +138,7 @@ export class StoreDayHourService {
 
             response.status(200).send({ 
                 success: true, 
-                message: Message.DELETE_SUCCESS('Loja', true),
+                message: Message.DELETE_SUCCESS('Dia/horário da loja', true),
             });
         });
     }

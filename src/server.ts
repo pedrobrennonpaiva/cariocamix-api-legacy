@@ -19,6 +19,7 @@ import productItemRouter from './routes/productItemRouter';
 import categoryProductRouter from './routes/categoryProductRouter';
 import categoryRouter from './routes/categoryRouter';
 import productRouter from './routes/productRouter';
+import storeDayHourRouter from './routes/storeDayHourRouter';
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use('/product', productRouter);
 app.use('/category', categoryRouter);
 app.use('/categoryProduct', categoryProductRouter);
 app.use('/productItem', productItemRouter);
+app.use('/storeDayHour', storeDayHourRouter);
 
 app.listen(port);
 
