@@ -1,6 +1,6 @@
 import util from "util";
 const multer = require("multer");
-import { GridFsStorage } from "../../packages-temp/multer-gridfs-storage";
+import { GridFsStorage } from "multer-gridfs-storage";
 import { GridFSBucket } from "mongodb";
 import mongoose from 'mongoose';
 
