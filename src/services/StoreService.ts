@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { Store } from "../models/Store";
 import db from '../database/db';
 import Message from "../utils/Message";
-import { StoreDayHour } from "../models/StoreDayHour";
+
 const StoreDb = db.Store;
 const StoreDayHourDb = db.StoreDayHour;
+const AddressStoreDb = db.AddressStore;
 
 export class StoreService {
 
@@ -16,6 +17,7 @@ export class StoreService {
         {
             var storeDayHours = await StoreDayHourDb.find({ storeId: model?.id }).lean();
             model.storeDayHours = storeDayHours.sort((a,b) => a.dayOfWeek - b.dayOfWeek);
+            model.addressStore = await AddressStoreDb.findOne({ storeId: model?.id }).lean();
         }
 
         return models;
@@ -29,6 +31,7 @@ export class StoreService {
 
             var storeDayHours = await StoreDayHourDb.find({ storeId: model?.id }).lean();
             model!.storeDayHours = storeDayHours.sort((a,b) => a.dayOfWeek - b.dayOfWeek);
+            model!.addressStore = await AddressStoreDb.findOne({ storeId: model?.id }).lean();
 
             return model;
         }

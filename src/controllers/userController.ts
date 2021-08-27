@@ -43,6 +43,11 @@ export default {
         await userService.resetPassword(request, response);
     },
 
+    async forgotPassword(request: Request, response: Response) {
+
+        await userService.forgotPassword(request, response);
+    },
+
     async insert(request: Request, response: Response) {
 
         await userService.insert(request, response);

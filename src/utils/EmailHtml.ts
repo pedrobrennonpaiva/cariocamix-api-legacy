@@ -39,4 +39,18 @@ export class EmailHtml {
             <p>Possui alguma dúvida ou problema? Entre em contato com nosso suporte!</p>
         `;
     }
+
+    static forgotPasswordUser = (name: string, password: string) => {
+
+        return `
+            <h2>Olá ${name}!</h2>
+
+            <p>Sua senha foi atualizada com sucesso!</p>
+
+            <p>Sua senha temporária é: ${password}</p>
+
+            <br/>
+            <p>Possui alguma dúvida ou problema? Entre em contato com nosso suporte!</p>
+        `;
+    }
 }

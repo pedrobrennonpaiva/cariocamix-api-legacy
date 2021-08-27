@@ -151,7 +151,7 @@ export class UserService {
         }
 
         user.password = bcrypt.hashSync(newPassword, 8);
-
+        
         await UserDb.findOneAndUpdate(
             { id: request.params.id }, 
             user, 
@@ -170,6 +170,51 @@ export class UserService {
                 user.email, 
                 Message.UPDATE_SUCCESS('Senha', true),
                 EmailHtml.resetPasswordUser(user.name)
+            );
+
+            response.status(200).send({ 
+                success: true, 
+                message: Message.UPDATE_SUCCESS('Senha', true),
+                user: ExtensionMethod.WithoutPassword(user)
+            });
+        }));
+    }
+
+    async forgotPassword(request: Request, response: Response) {
+        
+        var email = request.params.email;
+        var newPassword = StringRandom.randomPassword(8);
+        
+        var user = await UserDb.findOne({ email: email }) as User;
+
+        if(user == null)
+        {
+            response.status(400).send({ 
+                success: false, 
+                message: 'Usuário não encontrado',
+            });
+        }
+
+        user.password = bcrypt.hashSync(newPassword, 8);
+        
+        await UserDb.findOneAndUpdate(
+            { id: user.id }, 
+            user, 
+            { new: true }, 
+            ((err: any, user: any) => {
+            if(err)
+            {
+                response.status(400).send({ 
+                    success: false, 
+                    message: Message.UPDATE_ERROR,
+                    error: err
+                });
+            }
+
+            EmailService.sendEmail(
+                user.email, 
+                Message.UPDATE_SUCCESS('Senha', true),
+                EmailHtml.forgotPasswordUser(user.name, newPassword)
             );
 
             response.status(200).send({ 

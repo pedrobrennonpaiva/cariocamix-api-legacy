@@ -9,6 +9,7 @@ declare global {
         SENDGRID_EMAIL?: string;
         SMTP_EMAIL: string;
         SMTP_PWD: string;
+        MERCADOPAGO_ACCESSTOKEN: string;
       }
     }
   }
