@@ -219,7 +219,7 @@ export class UserService {
 
             response.status(200).send({ 
                 success: true, 
-                message: Message.UPDATE_SUCCESS('Senha', true),
+                message: Message.UPDATE_SUCCESS('Senha', true) + ' A senha foi enviada pelo e-mail informado!',
                 user: ExtensionMethod.WithoutPassword(user)
             });
         }));
