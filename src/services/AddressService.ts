@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Address } from "../models/Address";
 import db from '../database/db';
 import Message from "../utils/Message";
+import ExtensionMethod from "../utils/ExtensionMethods";
+import { User } from "../models/User";
 const AddressDb = db.Address;
 const UserDb = db.User;
 
@@ -13,7 +15,8 @@ export class AddressService {
 
         for(var model of models)
         {
-            model.user = await UserDb.findOne({ id: model?.userId});
+            var user = await UserDb.findOne({ id: model?.userId }) as User;
+            model.user = ExtensionMethod.WithoutPassword(user);
         }
 
         return models;
@@ -25,9 +28,32 @@ export class AddressService {
         {
             var model = await AddressDb.findOne({ id }).lean();
 
-            model!.user = await UserDb.findOne({ id: model?.userId});
+            var user = await UserDb.findOne({ id: model?.userId }) as User;
+            model!.user = ExtensionMethod.WithoutPassword(user);
 
             return model;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    async getByUserId(userId: string) {
+        
+        try
+        {
+            var models = await AddressDb.find({ userId: userId }).lean();
+
+            var user = await UserDb.findOne({ id: userId }) as User;
+            user = ExtensionMethod.WithoutPassword(user);
+
+            for(var model of models)
+            {
+                model.user = user;
+            }
+
+            return models;
         }
         catch
         {

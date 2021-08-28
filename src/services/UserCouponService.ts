@@ -73,7 +73,6 @@ export class UserCouponService {
         var model = new UserCoupon();
         model.userId = request.body.userId;
         model.couponId = request.body.couponId;
-        model.isUsed = request.body.isUsed;
 
         var user = await UserDb.findOne({ id: model.userId });
         var coupon = await CouponDb.findOne({ id: model.couponId });
