@@ -19,6 +19,13 @@ export default {
         response.status(200).send(coupon);
     },
 
+    async getByCode(request: Request, response: Response) {
+
+        var coupons = await couponService.getByCode(request.params.code);
+
+        response.status(200).send(coupons);
+    },
+
     async insert(request: Request, response: Response) {
 
         await couponService.insert(request, response);

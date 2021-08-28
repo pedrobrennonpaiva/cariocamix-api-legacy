@@ -27,6 +27,20 @@ export class CouponService {
         }
     }
 
+    async getByCode(code: string) {
+        
+        try
+        {
+            var model = await CouponDb.find({ code: code }).lean();
+
+            return model;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     async insert(request: Request, response: Response) {
 
         var model = new Coupon();
