@@ -21,6 +21,7 @@ import categoryRouter from './routes/categoryRouter';
 import productRouter from './routes/productRouter';
 import storeDayHourRouter from './routes/storeDayHourRouter';
 import mercadoPagoRouter from './routes/mercadoPagoRouter';
+import userCouponRouter from './routes/userCouponRouter';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use('/categoryProduct', categoryProductRouter);
 app.use('/productItem', productItemRouter);
 app.use('/storeDayHour', storeDayHourRouter);
 app.use('/mercadoPago', mercadoPagoRouter);
+app.use('/userCoupon', userCouponRouter);
 
 app.listen(port);
 
