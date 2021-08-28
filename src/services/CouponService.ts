@@ -46,6 +46,8 @@ export class CouponService {
         var model = new Coupon();
         model.code = request.body.code;
         model.isActive = request.body.isActive;
+        model.percentage = request.body.percentage;
+        model.price = request.body.price;
 
         const db = new CouponDb(model);
         

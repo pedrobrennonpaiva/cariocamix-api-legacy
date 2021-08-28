@@ -5,6 +5,8 @@ var schema = new Schema({
     id: { required: false, type: String, unique: true },
     code: { required: true, type: String },
     isActive: { required: true, type: Boolean },
+    percentage: { required: false, type: Number },
+    price: { required: false, type: Number },
     registerDate: { required: false, type: Date },
 });
 

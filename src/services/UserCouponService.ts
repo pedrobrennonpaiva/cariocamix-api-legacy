@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { UserCoupon } from "../models/UserCoupon";
 import db from '../database/db';
 import Message from "../utils/Message";
+import ExtensionMethod from "../utils/ExtensionMethods";
+import { User } from "../models/User";
 const UserCouponDb = db.UserCoupon;
 const UserDb = db.User;
 const CouponDb = db.Coupon;
@@ -14,7 +16,9 @@ export class UserCouponService {
 
         for(var model of models)
         {
-            model.user = await UserDb.findOne({ id: model?.userId });
+            var user = await UserDb.findOne({ id: model?.userId }) as User;
+            
+            model.user = ExtensionMethod.WithoutPassword(user);
             model.coupon = await CouponDb.findOne({ id: model?.couponId });
         }
 
@@ -27,10 +31,36 @@ export class UserCouponService {
         {
             var model = await UserCouponDb.findOne({ id }).lean();
 
-            model!.user = await UserDb.findOne({ id: model?.userId });
+            var user = await UserDb.findOne({ id: model?.userId }) as User;
+            user = ExtensionMethod.WithoutPassword(user);
+
+            model!.user = user;
             model!.coupon = await CouponDb.findOne({ id: model?.couponId });
 
             return model;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    async getByUserId(userId: string) {
+        
+        try
+        {
+            var models = await UserCouponDb.find({ userId: userId }).lean();
+
+            var user = await UserDb.findOne({ id: userId }) as User;
+            user = ExtensionMethod.WithoutPassword(user);
+
+            for(var model of models)
+            {
+                model.user = user;
+                model.coupon = await CouponDb.findOne({ id: model?.couponId });
+            }
+
+            return models;
         }
         catch
         {

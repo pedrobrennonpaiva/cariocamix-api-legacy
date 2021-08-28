@@ -5,4 +5,8 @@ export class Coupon extends Base {
     code: string;
 
     isActive: boolean;
+
+    percentage: number;
+
+    price: number;
 }
