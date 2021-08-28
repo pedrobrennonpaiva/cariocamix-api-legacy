@@ -227,123 +227,144 @@ export class UserService {
 
     async insert(request: Request, response: Response) {
 
-        var user = new User();
-        user.name = request.body.name;
-        user.username = request.body.username;
-        user.birthday = request.body.birthday;
-        user.cpf = request.body.cpf;
-        user.numberPhone = request.body.numberPhone;
-        user.email = request.body.email;
-
-        var randomPass = StringRandom.randomPassword(8);
-        user.password = request.body.password ? bcrypt.hashSync(request.body.password, 8) :
-                            bcrypt.hashSync(randomPass, 8);
-
-        var emailExist = await this.getByEmail(user.email);
-        var usernameExist = await this.getByUsername(user.username);
-        
-        if((emailExist && emailExist.length > 0) || (usernameExist && usernameExist.length > 0))
+        try 
         {
-            response.status(400).send({ 
-                success: false, 
-                message: 'Já existe um usuário com este e-mail ou username!',
-            });
-            return;
-        }
+            var user = new User();
+            user.name = request.body.name;
+            user.username = request.body.username;
+            user.birthday = request.body.birthday;
+            user.cpf = request.body.cpf;
+            user.numberPhone = request.body.numberPhone;
+            user.email = request.body.email;
 
-        const db = new UserDb(user);
-        
-        db.save((err: any) => {
-            if (err) {
-                console.log(err);
+            var randomPass = StringRandom.randomPassword(8);
+            user.password = request.body.password ? bcrypt.hashSync(request.body.password, 8) :
+                                bcrypt.hashSync(randomPass, 8);
+
+            var emailExist = await this.getByEmail(user.email);
+            var usernameExist = await this.getByUsername(user.username);
+            
+            if((emailExist && emailExist.length > 0) || (usernameExist && usernameExist.length > 0))
+            {
                 response.status(400).send({ 
                     success: false, 
-                    message: Message.CREATE_ERROR,
-                    error: err
+                    message: 'Já existe um usuário com este e-mail ou username!',
                 });
+                return;
             }
-            else {
 
-                EmailService.sendEmail(
-                    user.email, 
-                    Message.CREATE_SUCCESS('Usuário'),
-                    EmailHtml.insertUser(
-                        user.name, 
+            const db = new UserDb(user);
+            
+            db.save((err: any) => {
+                if (err) {
+                    console.log(err);
+                    response.status(400).send({ 
+                        success: false, 
+                        message: Message.CREATE_ERROR,
+                        error: err
+                    });
+                }
+                else {
+
+                    EmailService.sendEmail(
                         user.email, 
-                        request.body.password ? null : randomPass
-                    )
-                );
+                        Message.CREATE_SUCCESS('Usuário'),
+                        EmailHtml.insertUser(
+                            user.name, 
+                            user.email, 
+                            request.body.password ? null : randomPass
+                        )
+                    );
 
-                response.status(201).send({ 
-                    success: true, 
-                    message: Message.CREATE_SUCCESS("Usuário"),
-                    user: ExtensionMethod.WithoutPassword(user)
-                });
-            }
-        });
+                    response.status(201).send({ 
+                        success: true, 
+                        message: Message.CREATE_SUCCESS("Usuário"),
+                        user: ExtensionMethod.WithoutPassword(user)
+                    });
+                }
+            });
+        }
+        catch(err)
+        {
+            response.status(500).send({ 
+                success: false, 
+                message: Message.CREATE_ERROR,
+                error: err
+            });
+        }
     }
 
     async update(request: Request, response: Response) {
 
-        var id = request.params.id;
-
-        var oldUser = await UserDb.findOne({ id });
-        
-        var us = request.body as User;
-        us.id = oldUser?.id;
-        us.registerDate = oldUser?.registerDate!;
-        us.name = us.name ?? oldUser?.name;
-        us.birthday = us.birthday ?? oldUser?.birthday;
-        us.cpf = us.cpf ?? oldUser?.cpf;
-        us.numberPhone = us.numberPhone ?? oldUser?.numberPhone;
-        us.email = us.email ?? oldUser?.email;
-        us.password = oldUser?.password!;
-
-        if(us.image && oldUser?.image)
+        try 
         {
-            var imgService = new ImageService();
-            await imgService.delete(oldUser?.image!.split('/').slice(-1)[0]).catch(() => '');
-        }
-        else if(!us.image) 
-        {
-            us.image = oldUser?.image!;
-        }
+            var id = request.params.id;
 
-        var emailExist = await this.getByEmail(us.email);
-        var usernameExist = await this.getByUsername(us.username);
-        
-        if((us.email != oldUser?.email && emailExist && emailExist.length > 0) || 
-           (us.username != oldUser?.username && usernameExist && usernameExist.length > 0))
-        {
-            response.status(400).send({ 
-                success: false, 
-                message: 'Já existe um usuário com este e-mail ou username!',
-            });
-            return;
-        }
-        
-        await UserDb.findOneAndUpdate({ id: request.params.id }, us, { new: true }, ((err: any, user: any) => {
-            if(err)
+            var oldUser = await UserDb.findOne({ id });
+            
+            var us = request.body as User;
+            us.id = oldUser?.id;
+            us.registerDate = oldUser?.registerDate!;
+            us.name = us.name ?? oldUser?.name;
+            us.birthday = us.birthday ?? oldUser?.birthday;
+            us.cpf = us.cpf ?? oldUser?.cpf;
+            us.numberPhone = us.numberPhone ?? oldUser?.numberPhone;
+            us.email = us.email ?? oldUser?.email;
+            us.password = oldUser?.password!;
+
+            if(us.image && oldUser?.image)
+            {
+                var imgService = new ImageService();
+                await imgService.delete(oldUser?.image!.split('/').slice(-1)[0]).catch(() => '');
+            }
+            else if(!us.image) 
+            {
+                us.image = oldUser?.image!;
+            }
+
+            var emailExist = await this.getByEmail(us.email);
+            var usernameExist = await this.getByUsername(us.username);
+            
+            if((us.email != oldUser?.email && emailExist && emailExist.length > 0) || 
+            (us.username != oldUser?.username && usernameExist && usernameExist.length > 0))
             {
                 response.status(400).send({ 
                     success: false, 
-                    message: Message.UPDATE_ERROR,
-                    error: err
+                    message: 'Já existe um usuário com este e-mail ou username!',
                 });
+                return;
             }
+            
+            await UserDb.findOneAndUpdate({ id: request.params.id }, us, { new: true }, ((err: any, user: any) => {
+                if(err)
+                {
+                    response.status(400).send({ 
+                        success: false, 
+                        message: Message.UPDATE_ERROR,
+                        error: err
+                    });
+                }
 
-            EmailService.sendEmail(
-                user.email, 
-                Message.UPDATE_SUCCESS('Usuário'),
-                EmailHtml.updateUser(user.name)
-            );
+                EmailService.sendEmail(
+                    user.email, 
+                    Message.UPDATE_SUCCESS('Usuário'),
+                    EmailHtml.updateUser(user.name)
+                );
 
-            response.status(200).send({ 
-                success: true, 
-                message: Message.UPDATE_SUCCESS('Usuário'),
-                user: ExtensionMethod.WithoutPassword(user)
+                response.status(200).send({ 
+                    success: true, 
+                    message: Message.UPDATE_SUCCESS('Usuário'),
+                    user: ExtensionMethod.WithoutPassword(user)
+                });
+            }));
+        }
+        catch(err) {
+            response.status(500).send({
+                success: false, 
+                message: Message.UPDATE_ERROR,
+                error: err
             });
-        }));
+        }
     }
 
     async delete(request: Request, response: Response) {
