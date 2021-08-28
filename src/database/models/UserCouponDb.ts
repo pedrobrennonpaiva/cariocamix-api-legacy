@@ -5,6 +5,7 @@ var schema = new Schema({
     id: { required: false, type: String, unique: true },
     userId: { required: true, type: String },
     couponId: { required: true, type: String },
+    isUsed: { required: false, type: Boolean },
     registerDate: { required: false, type: Date },
 });
 

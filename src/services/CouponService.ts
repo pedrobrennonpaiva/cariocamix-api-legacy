@@ -31,7 +31,7 @@ export class CouponService {
         
         try
         {
-            var model = await CouponDb.find({ code: code }).lean();
+            var model = await CouponDb.findOne({ code: code }).lean();
 
             return model;
         }

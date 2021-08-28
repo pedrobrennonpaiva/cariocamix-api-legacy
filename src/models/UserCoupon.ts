@@ -12,4 +12,6 @@ export class UserCoupon extends Base {
     couponId: string = uuid();
     
     coupon: Coupon | null = null;
+
+    isUsed: boolean = false;
 }
